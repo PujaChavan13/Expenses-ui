@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
 
@@ -13,6 +14,23 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
+
+const CATEGORIES = [
+  "food",
+  "transport",
+  "entertainment",
+  "utilities",
+  "shopping",
+  "other",
+];
+
+const normalizeCategoryKey = (category: string) =>
+  category.trim().toLowerCase();
+
+const normalizeToKnownCategory = (category: string) => {
+  const key = normalizeCategoryKey(category);
+  return CATEGORIES.includes(key) ? key : "other";
+};
 
 const CalendarIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg
@@ -33,6 +51,8 @@ const CalendarIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 );
 
 export default function MonthlySummary({ expenses, month }: Props) {
+  const t = useTranslations();
+  const locale = useLocale();
   const [viewMonth, setViewMonth] = useState(month);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -72,7 +92,8 @@ export default function MonthlySummary({ expenses, month }: Props) {
   const categoryTotals = useMemo(
     () =>
       monthlyExpenses.reduce<Record<string, number>>((acc, expense) => {
-        acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+        const key = normalizeToKnownCategory(expense.category);
+        acc[key] = (acc[key] || 0) + expense.amount;
         return acc;
       }, {}),
     [monthlyExpenses]
@@ -118,7 +139,8 @@ export default function MonthlySummary({ expenses, month }: Props) {
 
   const formatDisplayDate = (dateStr: string) => {
     const d = new Date(dateStr + "T12:00:00");
-    return d.toLocaleDateString("en-US", {
+    const localeString = locale === "hi" ? "hi-IN" : locale === "mr" ? "mr-IN" : "en-US";
+    return d.toLocaleDateString(localeString, {
       weekday: "short",
       year: "numeric",
       month: "short",
@@ -128,82 +150,90 @@ export default function MonthlySummary({ expenses, month }: Props) {
 
   return (
     <Card className="mb-4 sm:mb-6 p-4 sm:p-6 overflow-hidden">
-      <h2 className="text-base sm:text-lg font-semibold mb-4">Monthly Summary</h2>
+      <h2 className="text-base sm:text-lg font-semibold mb-4">{t("monthlySummary.title")}</h2>
       <p className="mb-4 sm:mb-6 text-sm sm:text-base">
-        <strong>Total Expense:</strong> {totalMonthlyExpenses}
+        <strong>{t("monthlySummary.totalExpenses")}:</strong> {totalMonthlyExpenses}
       </p>
 
       {/* Calendar toggle */}
       <button
         onClick={() => setCalendarOpen((prev) => !prev)}
         className="flex items-center justify-center sm:justify-start gap-2 mb-4 w-full sm:w-auto px-4 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm"
-        aria-label={calendarOpen ? "Close calendar" : "Open calendar"}
+        aria-label={
+          calendarOpen
+            ? t("monthlySummary.calendar.close")
+            : t("monthlySummary.calendar.open")
+        }
       >
         <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-        <span>{calendarOpen ? "Hide calendar" : "Show calendar"}</span>
+        <span>
+          {calendarOpen
+            ? t("monthlySummary.calendar.close")
+            : t("monthlySummary.calendar.open")}
+        </span>
       </button>
 
       {/* Calendar */}
       {calendarOpen && (
-      <div className="mb-6 overflow-x-auto">
-        <div className="flex items-center justify-between mb-3 sm:mb-4 min-w-[260px]">
-          <button
-            onClick={goPrevMonth}
-            className="p-2 rounded hover:bg-gray-100 transition-colors shrink-0 touch-manipulation"
-            aria-label="Previous month"
-          >
-            ←
-          </button>
-          <h3 className="font-medium text-sm sm:text-base min-w-[140px] sm:min-w-[180px] text-center">
-            {MONTHS[parseInt(viewMonth.split("-")[1], 10) - 1]} {viewMonth.split("-")[0]}
-          </h3>
-          <button
-            onClick={goNextMonth}
-            className="p-2 rounded hover:bg-gray-100 transition-colors shrink-0 touch-manipulation"
-            aria-label="Next month"
-          >
-            →
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-center text-xs sm:text-sm min-w-[260px]">
-          {WEEKDAYS.map((w, idx) => (
-            <div key={idx} className="py-1 font-medium text-muted-foreground truncate">
-              <span className="sm:hidden">{w[0]}</span>
-              <span className="hidden sm:inline">{w}</span>
-            </div>
-          ))}
-          {calendarDays.map(({ day, date }, i) => (
+        <div className="mb-6 overflow-x-auto">
+          <div className="flex items-center justify-between mb-3 sm:mb-4 min-w-[260px]">
             <button
-              key={i}
-              onClick={() => date && setSelectedDate(selectedDate === date ? null : date)}
-              disabled={!day}
-              className={`
-                min-h-8 sm:min-h-12 py-1 sm:py-2 rounded text-xs sm:text-sm transition-colors flex flex-col items-center justify-center touch-manipulation
-                ${!day ? "invisible" : ""}
-                ${date && dateTotals[date] ? "font-semibold" : "text-muted-foreground"}
-                ${selectedDate === date ? "bg-gray-900 text-white" : "hover:bg-gray-100 active:bg-gray-200"}
-                ${date && dateTotals[date] && selectedDate !== date ? "bg-amber-50" : ""}
-              `}
+              onClick={goPrevMonth}
+              className="p-2 rounded hover:bg-gray-100 transition-colors shrink-0 touch-manipulation"
+              aria-label={t("monthlySummary.calendar.previousMonth")}
             >
-              {day ?? ""}
-              {date && dateTotals[date] && (
-                <span className="text-[9px] sm:text-[10px] opacity-80 mt-0.5">{dateTotals[date]}</span>
-              )}
+              ←
             </button>
-          ))}
+            <h3 className="font-medium text-sm sm:text-base min-w-[140px] sm:min-w-[180px] text-center">
+              {MONTHS[parseInt(viewMonth.split("-")[1], 10) - 1]} {viewMonth.split("-")[0]}
+            </h3>
+            <button
+              onClick={goNextMonth}
+              className="p-2 rounded hover:bg-gray-100 transition-colors shrink-0 touch-manipulation"
+              aria-label={t("monthlySummary.calendar.nextMonth")}
+            >
+              →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-center text-xs sm:text-sm min-w-[260px]">
+            {WEEKDAYS.map((w, idx) => (
+              <div key={idx} className="py-1 font-medium text-muted-foreground truncate">
+                <span className="sm:hidden">{w[0]}</span>
+                <span className="hidden sm:inline">{w}</span>
+              </div>
+            ))}
+            {calendarDays.map(({ day, date }, i) => (
+              <button
+                key={i}
+                onClick={() => date && setSelectedDate(selectedDate === date ? null : date)}
+                disabled={!day}
+                className={`
+                  min-h-8 sm:min-h-12 py-1 sm:py-2 rounded text-xs sm:text-sm transition-colors flex flex-col items-center justify-center touch-manipulation
+                  ${!day ? "invisible" : ""}
+                  ${date && dateTotals[date] ? "font-semibold" : "text-muted-foreground"}
+                  ${selectedDate === date ? "bg-gray-900 text-white" : "hover:bg-gray-100 active:bg-gray-200"}
+                  ${date && dateTotals[date] && selectedDate !== date ? "bg-amber-50" : ""}
+                `}
+              >
+                {day ?? ""}
+                {date && dateTotals[date] && (
+                  <span className="text-[9px] sm:text-[10px] opacity-80 mt-0.5">{dateTotals[date]}</span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
       )}
 
       {/* Date-wise expenses */}
       {selectedDate && (
         <div className="border-t pt-4 mt-4">
           <h3 className="text-sm sm:text-base font-medium mb-3">
-            Expenses for {formatDisplayDate(selectedDate)}
+            {t("monthlySummary.title")} {formatDisplayDate(selectedDate)}
           </h3>
           {selectedDateExpenses.length === 0 ? (
-            <p className="text-muted-foreground text-sm sm:text-base">No expenses on this date</p>
+            <p className="text-muted-foreground text-sm sm:text-base">{t("monthlySummary.noData")}</p>
           ) : (
             <ul className="space-y-2">
               {selectedDateExpenses.map((expense) => (
@@ -212,7 +242,13 @@ export default function MonthlySummary({ expenses, month }: Props) {
                   className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 py-2 border-b border-gray-100 last:border-0"
                 >
                   <div className="min-w-0 flex-1">
-                    <span className="font-medium">{expense.category}</span>
+                    <span className="font-medium">
+                      {t(
+                        `expenseForm.categories.${normalizeToKnownCategory(
+                          expense.category
+                        )}`
+                      )}
+                    </span>
                     {expense.note && (
                       <span className="text-muted-foreground text-sm sm:ml-2 block sm:inline truncate">
                         — {expense.note}
@@ -223,7 +259,7 @@ export default function MonthlySummary({ expenses, month }: Props) {
                 </li>
               ))}
               <li className="flex justify-between pt-2 font-semibold text-sm sm:text-base">
-                <span>Total</span>
+                <span>{t("expenseList.total")}</span>
                 <span>{dateTotals[selectedDate]}</span>
               </li>
             </ul>
@@ -233,9 +269,9 @@ export default function MonthlySummary({ expenses, month }: Props) {
 
       {/* Category breakdown */}
       <div className="border-t pt-4 mt-4">
-        <h3 className="text-sm sm:text-base font-medium mb-2">Category-wise breakdown</h3>
+        <h3 className="text-sm sm:text-base font-medium mb-2">{t("monthlySummary.categoryBreakdown")}</h3>
         {Object.keys(categoryTotals).length === 0 ? (
-          <p className="text-muted-foreground text-sm sm:text-base">No expenses for this month</p>
+          <p className="text-muted-foreground text-sm sm:text-base">{t("monthlySummary.noData")}</p>
         ) : (
           <ul className="space-y-2">
             {Object.entries(categoryTotals).map(([category, amount]) => (
@@ -243,7 +279,7 @@ export default function MonthlySummary({ expenses, month }: Props) {
                 key={category}
                 className="flex justify-between gap-4 py-1 border-b border-gray-100 last:border-0 text-sm sm:text-base min-w-0"
               >
-                <span className="truncate">{category}</span>
+                <span className="truncate">{t(`expenseForm.categories.${category}`)}</span>
                 <span className="shrink-0">{amount}</span>
               </li>
             ))}

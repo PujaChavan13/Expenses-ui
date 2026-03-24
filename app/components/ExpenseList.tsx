@@ -1,12 +1,25 @@
 "use client";
 import { useState, Dispatch, SetStateAction } from "react";
+import { useTranslations } from "next-intl";
 import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
 
 const CATEGORIES = [
-  "Petrol", "Food", "Shopping", "Electricity", "Milk",
-  "hotel", "Employee salary", "Other",
+  "food",
+  "transport",
+  "entertainment",
+  "utilities",
+  "shopping",
+  "other",
 ];
+
+const normalizeCategoryKey = (category: string) =>
+  category.trim().toLowerCase();
+
+const normalizeToKnownCategory = (category: string) => {
+  const key = normalizeCategoryKey(category);
+  return CATEGORIES.includes(key) ? key : "other";
+};
 
 type Props = {
   expenses: Expense[];
@@ -14,6 +27,7 @@ type Props = {
 };
 
 export default function ExpenseList({ expenses, setExpenses }: Props) {
+  const t = useTranslations();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editAmount, setEditAmount] = useState<number | "">("");
   const [editCategory, setEditCategory] = useState("");
@@ -22,7 +36,7 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
   const startEdit = (expense: Expense) => {
     setEditingId(expense.id);
     setEditAmount(expense.amount);
-    setEditCategory(expense.category);
+    setEditCategory(normalizeToKnownCategory(expense.category));
     setEditNote(expense.note || "");
   };
 
@@ -41,7 +55,7 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
           ? {
               ...e,
               amount: Number(editAmount),
-              category: editCategory,
+              category: normalizeToKnownCategory(editCategory),
               note: editNote,
             }
           : e
@@ -51,7 +65,7 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this expense?")) {
+    if (confirm(t("expenseList.confirmDelete"))) {
       setExpenses((prev) => prev.filter((e) => e.id !== id));
     }
   };
@@ -59,15 +73,15 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
   if (expenses.length === 0) {
     return (
       <Card className="mb-4 sm:mb-6 p-4 sm:p-6">
-        <h2 className="text-base sm:text-lg font-semibold mb-4">Expense List</h2>
-        <p className="text-muted-foreground text-sm sm:text-base">No expenses added yet.</p>
+        <h2 className="text-base sm:text-lg font-semibold mb-4">{t("expenseList.title")}</h2>
+        <p className="text-muted-foreground text-sm sm:text-base">{t("expenseList.empty")}</p>
       </Card>
     );
   }
 
   return (
     <Card className="mb-4 sm:mb-6 p-4 sm:p-6 overflow-x-auto">
-      <h2 className="text-base sm:text-lg font-semibold mb-4">Expense List</h2>
+      <h2 className="text-base sm:text-lg font-semibold mb-4">{t("expenseList.title")}</h2>
       <ul className="space-y-2 min-w-0">
         {expenses.map((expense) => (
           <li
@@ -77,7 +91,9 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
             {editingId === expense.id ? (
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:items-end">
                 <div className="flex flex-col gap-1 sm:w-24">
-                  <label className="text-xs font-medium text-muted-foreground">Amount</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    {t("expenseList.amount")}
+                  </label>
                   <input
                     type="number"
                     value={editAmount}
@@ -88,7 +104,9 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                   />
                 </div>
                 <div className="flex flex-col gap-1 sm:w-36">
-                  <label className="text-xs font-medium text-muted-foreground">Category</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    {t("expenseList.category")}
+                  </label>
                   <select
                     value={editCategory}
                     onChange={(e) => setEditCategory(e.target.value)}
@@ -96,17 +114,19 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
-                        {cat}
+                        {t(`expenseForm.categories.${cat}`)}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  <label className="text-xs font-medium text-muted-foreground">Note</label>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    {t("expenseForm.description")}
+                  </label>
                   <input
                     value={editNote}
                     onChange={(e) => setEditNote(e.target.value)}
-                    placeholder="Note"
+                    placeholder={t("expenseForm.descriptionPlaceholder")}
                     className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                   />
                 </div>
@@ -115,13 +135,13 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                     onClick={saveEdit}
                     className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded hover:bg-gray-800"
                   >
-                    Save
+                    {t("expenseTracker.save")}
                   </button>
                   <button
                     onClick={cancelEdit}
                     className="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-100"
                   >
-                    Cancel
+                    {t("expenseForm.cancel")}
                   </button>
                 </div>
               </div>
@@ -129,7 +149,13 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
               <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-1">
                 <div className="flex justify-between sm:block gap-2">
                   <span className="font-medium sm:w-20">{expense.amount}</span>
-                  <span className="sm:w-32">{expense.category}</span>
+                  <span className="sm:w-32">
+                    {t(
+                      `expenseForm.categories.${normalizeToKnownCategory(
+                        expense.category
+                      )}`
+                    )}
+                  </span>
                 </div>
                 <span className="text-muted-foreground text-sm truncate flex-1 min-w-0">
                   {expense.note || "-"}
@@ -139,13 +165,13 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                     onClick={() => startEdit(expense)}
                     className="text-sm text-gray-600 hover:text-gray-900 underline"
                   >
-                    Edit
+                    {t("expenseList.edit")}
                   </button>
                   <button
                     onClick={() => handleDelete(expense.id)}
                     className="text-sm text-red-600 hover:text-red-700 underline"
                   >
-                    Delete
+                    {t("expenseList.delete")}
                   </button>
                 </div>
               </div>

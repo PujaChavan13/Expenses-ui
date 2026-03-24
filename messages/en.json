@@ -1,0 +1,77 @@
+{
+  "navigation": {
+    "title": "Expense Tracker",
+    "summary": "Monthly Summary",
+    "expenses": "Expenses"
+  },
+  "header": {
+    "welcome": "Welcome to Expense Tracker",
+    "description": "Track your daily expenses efficiently"
+  },
+  "expenseTracker": {
+    "title": "Expense Tracker",
+    "addExpense": "Add Expense",
+    "amount": "Amount",
+    "category": "Category",
+    "save": "Save"
+  },
+  "expenseForm": {
+    "title": "Add New Expense",
+    "subtitle": "Fill in the details below to add a new expense entry",
+    "amount": "Amount",
+    "amountPlaceholder": "Enter amount",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "categories": {
+      "food": "Food",
+      "transport": "Transport",
+      "entertainment": "Entertainment",
+      "utilities": "Utilities",
+      "shopping": "Shopping",
+      "other": "Other"
+    },
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description (optional)",
+    "date": "Date",
+    "save": "Save Expense",
+    "cancel": "Cancel",
+    "errors": {
+      "amountRequired": "Amount is required",
+      "categoryRequired": "Category is required",
+      "invalidAmount": "Please enter a valid amount"
+    },
+    "success": "Expense added successfully"
+  },
+  "expenseList": {
+    "title": "Recent Expenses",
+    "empty": "No expenses yet. Add your first expense!",
+    "delete": "Delete",
+    "edit": "Edit",
+    "total": "Total",
+    "date": "Date",
+    "category": "Category",
+    "amount": "Amount",
+    "confirmDelete": "Are you sure you want to delete this expense?"
+  },
+  "monthlySummary": {
+    "title": "Monthly Summary",
+    "totalExpenses": "Total Expenses",
+    "categoryBreakdown": "Category Breakdown",
+    "currentMonth": "Current Month",
+    "calendar": {
+      "open": "Show calendar",
+      "close": "Hide calendar",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month"
+    },
+    "noData": "No expense data for this month",
+    "highest": "Highest Expense Category",
+    "average": "Average Expense"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "marathi": "मराठी"
+  }
+}
