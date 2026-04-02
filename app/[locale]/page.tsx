@@ -4,7 +4,8 @@ import { Expense } from "../types/expense";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import MonthlySummary from "../components/MonthlySummary";
-import { getExpenses } from "../utils/storage";
+import ExpenseChartsDashboard from "../components/charts/ExpenseChartsDashboard";
+import { getExpenses } from "../services/storage";
 import Header, { ActiveSection } from "../components/Header";
 
 export default function Page() {
@@ -25,6 +26,7 @@ export default function Page() {
   return (
     <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
       <Header activeSection={activeSection} onSectionClick={setActiveSection} />
+      <ExpenseChartsDashboard expenses={expenses} />
       {activeSection === "add" && (
         <ExpenseForm setExpenses={setExpenses} />
       )}

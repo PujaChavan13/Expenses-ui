@@ -3,6 +3,7 @@ import { useState, Dispatch, SetStateAction } from "react";
 import { useTranslations } from "next-intl";
 import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
+import { deleteExpense, updateExpense } from "../services/storage";
 
 const CATEGORIES = [
   "food",
@@ -28,13 +29,13 @@ type Props = {
 
 export default function ExpenseList({ expenses, setExpenses }: Props) {
   const t = useTranslations();
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | number | null>(null);
   const [editAmount, setEditAmount] = useState<number | "">("");
   const [editCategory, setEditCategory] = useState("");
   const [editNote, setEditNote] = useState("");
 
   const startEdit = (expense: Expense) => {
-    setEditingId(expense.id);
+    setEditingId(expense._id);
     setEditAmount(expense.amount);
     setEditCategory(normalizeToKnownCategory(expense.category));
     setEditNote(expense.note || "");
@@ -47,26 +48,37 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
     setEditNote("");
   };
 
-  const saveEdit = () => {
-    if (editingId === null || editAmount === "") return;
+  const saveEdit = async() => {
+    if (!editingId  || editAmount === "") return;
+    try {
+      const updatedExpense = {
+        amount: Number(editAmount),
+        category: normalizeToKnownCategory(editCategory),
+        note: editNote,
+      };
+      await updateExpense(String(editingId), updatedExpense);
+    
     setExpenses((prev) =>
       prev.map((e) =>
-        e.id === editingId
-          ? {
-              ...e,
-              amount: Number(editAmount),
-              category: normalizeToKnownCategory(editCategory),
-              note: editNote,
-            }
-          : e
+        e._id === editingId
+          ? { ...e, ...updatedExpense }: e
       )
     );
     cancelEdit();
-  };
+  }catch (error) {
+    console.error("Failed to update expense:", error);
+  }
+};
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async(id: string ) => {
     if (confirm(t("expenseList.confirmDelete"))) {
-      setExpenses((prev) => prev.filter((e) => e.id !== id));
+      try {
+        await deleteExpense(String(id));
+      setExpenses((prev) => prev.filter((e) => e._id !== id));
+    }
+      catch (error) {
+        console.error("Failed to delete expense:", error);
+      }
     }
   };
 
@@ -85,10 +97,10 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
       <ul className="space-y-2 min-w-0">
         {expenses.map((expense) => (
           <li
-            key={expense.id}
+            key={String(expense._id)}
             className="py-3 border-b border-gray-100 last:border-0"
           >
-            {editingId === expense.id ? (
+            {editingId === expense._id ? (
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:items-end">
                 <div className="flex flex-col gap-1 sm:w-24">
                   <label className="text-xs font-medium text-muted-foreground">
@@ -168,7 +180,7 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                     {t("expenseList.edit")}
                   </button>
                   <button
-                    onClick={() => handleDelete(expense.id)}
+                    onClick={() => handleDelete(expense._id)}
                     className="text-sm text-red-600 hover:text-red-700 underline"
                   >
                     {t("expenseList.delete")}

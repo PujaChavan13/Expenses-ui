@@ -238,7 +238,7 @@ export default function MonthlySummary({ expenses, month }: Props) {
             <ul className="space-y-2">
               {selectedDateExpenses.map((expense) => (
                 <li
-                  key={expense.id}
+                  key={String(expense.id)}
                   className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 py-2 border-b border-gray-100 last:border-0"
                 >
                   <div className="min-w-0 flex-1">
