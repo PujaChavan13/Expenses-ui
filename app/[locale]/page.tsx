@@ -1,41 +1,31 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Expense } from "../types/expense";
+import { useState } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import MonthlySummary from "../components/MonthlySummary";
+import BudgetDisplay from "../components/BudgetDisplay";
 import ExpenseChartsDashboard from "../components/charts/ExpenseChartsDashboard";
-import { getExpenses } from "../services/storage";
 import Header, { ActiveSection } from "../components/Header";
+import { useExpense } from "../context/ExpenseContext";
 
 export default function Page() {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const { expenses } = useExpense();
   const [activeSection, setActiveSection] = useState<ActiveSection>(null);
-
-  // Load expenses from backend
-  useEffect(() => {
-    const loadExpenses = async () => {
-      const data = await getExpenses();
-      setExpenses(data);
-    };
-    loadExpenses();
-  }, []);
 
   const currentMonth = new Date().toISOString().slice(0, 7);
 
   return (
     <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
       <Header activeSection={activeSection} onSectionClick={setActiveSection} />
-      <ExpenseChartsDashboard expenses={expenses} />
-      {activeSection === "add" && (
-        <ExpenseForm setExpenses={setExpenses} />
-      )}
+      <ExpenseChartsDashboard  />
+      {activeSection === "add" && <ExpenseForm />}
       {activeSection === "summary" && (
-        <MonthlySummary expenses={expenses} month={currentMonth} />
+        <>
+          <BudgetDisplay month={currentMonth} />
+          <MonthlySummary month={currentMonth} />
+        </>
       )}
-      {activeSection === "list" && (
-        <ExpenseList expenses={expenses} setExpenses={setExpenses} />
-      )}
+      {activeSection === "list" && <ExpenseList />}
     </main>
   );
 }

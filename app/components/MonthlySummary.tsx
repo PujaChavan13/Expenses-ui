@@ -1,13 +1,9 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
+import { useExpense } from "@/app/context/ExpenseContext";
 
-type Props = {
-  expenses: Expense[];
-  month: string;
-};
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = [
@@ -50,7 +46,8 @@ const CalendarIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-export default function MonthlySummary({ expenses, month }: Props) {
+export default function MonthlySummary({  month }:{month:string} ) {
+  const { expenses } = useExpense();
   const t = useTranslations();
   const locale = useLocale();
   const [viewMonth, setViewMonth] = useState(month);
@@ -238,7 +235,7 @@ export default function MonthlySummary({ expenses, month }: Props) {
             <ul className="space-y-2">
               {selectedDateExpenses.map((expense) => (
                 <li
-                  key={String(expense.id)}
+                  key={String(expense._id)}
                   className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 py-2 border-b border-gray-100 last:border-0"
                 >
                   <div className="min-w-0 flex-1">

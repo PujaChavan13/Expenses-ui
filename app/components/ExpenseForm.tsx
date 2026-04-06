@@ -1,23 +1,17 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
-import { addExpense,getExpenses} from "../services/storage";
+import { useExpense } from "../context/ExpenseContext";
 
-
-type Props = {
-  setExpenses: Dispatch<SetStateAction<Expense[]>>;
-};
-
-export default function ExpenseForm({ setExpenses }: Props) {
+export default function ExpenseForm() {
   const t = useTranslations();
+  const { addNewExpense, loading: contextLoading } = useExpense();
 
   const [amount, setAmount] = useState<number | "">("");
   const [category, setCategory] = useState<string>("");
   const [note, setNote] = useState<string>("");
-
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,26 +39,26 @@ export default function ExpenseForm({ setExpenses }: Props) {
     try {
       setLoading(true);
 
-      const savedExpense = await addExpense({
+      const result = await addNewExpense({
         amount: Number(amount),
         category,
         note,
         date: new Date().toISOString().slice(0, 10),
       });
 
-      if (!savedExpense || !savedExpense._id) {
+      if (!result) {
         throw new Error("Failed to save expense");
       }
 
-      // Update UI with backend response
-      const updatedExpenses = await getExpenses();
-      setExpenses(updatedExpenses);
-      
       setSuccess(t("expenseForm.success"));
       resetForm();
     } catch (err) {
       console.error(err);
-      setError("Something went wrong while saving expense");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while saving expense"
+      );
     } finally {
       setLoading(false);
 
@@ -150,9 +144,9 @@ export default function ExpenseForm({ setExpenses }: Props) {
         {/* Button */}
         <button
           onClick={handleAddExpense}
-          disabled={loading}
+          disabled={loading || contextLoading}
           className={`px-4 py-2 rounded-md font-medium w-full sm:w-auto transition-colors ${
-            loading
+            loading || contextLoading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-gray-900 text-white hover:bg-gray-800"
           }`}

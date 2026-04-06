@@ -73,5 +73,17 @@
     "english": "English",
     "hindi": "हिंदी",
     "marathi": "मराठी"
+  },
+  "budget": {
+    "title": "मासिक बजेट",
+    "setBudget": "बजेट सेट करा",
+    "edit": "बजेट संपादित करा",
+    "setAmount": "बजेटची रक्कम सेट करा",
+    "spent": "खर्च केलेले",
+    "remaining": "शिल्लक",
+    "noBudget": "या महिन्यासाठी कोणताही बजेट सेट नाही",
+    "updateSuccess": "बजेट यशस्वीरित्या आपडेट केला गेला",
+    "percentageSpent": "बजेटाचा खर्च",
+    "overBudget": "बजेटपेक्षा जास्त"
   }
 }

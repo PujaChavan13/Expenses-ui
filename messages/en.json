@@ -73,5 +73,17 @@
     "english": "English",
     "hindi": "हिंदी",
     "marathi": "मराठी"
+  },
+  "budget": {
+    "title": "Monthly Budget",
+    "setBudget": "Set Budget",
+    "edit": "Edit Budget",
+    "setAmount": "Set Budget Amount",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "noBudget": "No budget set for this month",
+    "updateSuccess": "Budget updated successfully",
+    "percentageSpent": "of budget spent",
+    "overBudget": "over budget"
   }
 }

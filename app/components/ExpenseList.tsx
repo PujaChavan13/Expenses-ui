@@ -1,9 +1,8 @@
 "use client";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Expense } from "../types/expense";
 import { Card } from "@/components/ui/card";
-import { deleteExpense, updateExpense } from "../services/storage";
+import { useExpense } from "../context/ExpenseContext";
 
 const CATEGORIES = [
   "food",
@@ -22,23 +21,22 @@ const normalizeToKnownCategory = (category: string) => {
   return CATEGORIES.includes(key) ? key : "other";
 };
 
-type Props = {
-  expenses: Expense[];
-  setExpenses: Dispatch<SetStateAction<Expense[]>>;
-};
-
-export default function ExpenseList({ expenses, setExpenses }: Props) {
+export default function ExpenseList() {
   const t = useTranslations();
-  const [editingId, setEditingId] = useState<string | number | null>(null);
+  const { expenses, updateExpenseById, deleteExpenseById } = useExpense();
+
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editAmount, setEditAmount] = useState<number | "">("");
   const [editCategory, setEditCategory] = useState("");
   const [editNote, setEditNote] = useState("");
+  const [error, setError] = useState<string>("");
 
-  const startEdit = (expense: Expense) => {
-    setEditingId(expense._id);
-    setEditAmount(expense.amount);
-    setEditCategory(normalizeToKnownCategory(expense.category));
-    setEditNote(expense.note || "");
+  const startEdit = (id: string, amount: number, category: string, note?: string) => {
+    setEditingId(id);
+    setEditAmount(amount);
+    setEditCategory(normalizeToKnownCategory(category));
+    setEditNote(note || "");
+    setError("");
   };
 
   const cancelEdit = () => {
@@ -46,38 +44,35 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
     setEditAmount("");
     setEditCategory("");
     setEditNote("");
+    setError("");
   };
 
-  const saveEdit = async() => {
-    if (!editingId  || editAmount === "") return;
+  const saveEdit = async () => {
+    if (!editingId || editAmount === "") return;
     try {
-      const updatedExpense = {
+      setError("");
+      await updateExpenseById(editingId, {
         amount: Number(editAmount),
         category: normalizeToKnownCategory(editCategory),
         note: editNote,
-      };
-      await updateExpense(String(editingId), updatedExpense);
-    
-    setExpenses((prev) =>
-      prev.map((e) =>
-        e._id === editingId
-          ? { ...e, ...updatedExpense }: e
-      )
-    );
-    cancelEdit();
-  }catch (error) {
-    console.error("Failed to update expense:", error);
-  }
-};
+      });
+      cancelEdit();
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to update expense";
+      setError(errorMsg);
+      console.error("Failed to update expense:", err);
+    }
+  };
 
-  const handleDelete = async(id: string ) => {
+  const handleDelete = async (id: string) => {
     if (confirm(t("expenseList.confirmDelete"))) {
       try {
-        await deleteExpense(String(id));
-      setExpenses((prev) => prev.filter((e) => e._id !== id));
-    }
-      catch (error) {
-        console.error("Failed to delete expense:", error);
+        setError("");
+        await deleteExpenseById(id);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : "Failed to delete expense";
+        setError(errorMsg);
+        console.error("Failed to delete expense:", err);
       }
     }
   };
@@ -94,6 +89,14 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
   return (
     <Card className="mb-4 sm:mb-6 p-4 sm:p-6 overflow-x-auto">
       <h2 className="text-base sm:text-lg font-semibold mb-4">{t("expenseList.title")}</h2>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
       <ul className="space-y-2 min-w-0">
         {expenses.map((expense) => (
           <li
@@ -174,7 +177,14 @@ export default function ExpenseList({ expenses, setExpenses }: Props) {
                 </span>
                 <div className="flex gap-2 mt-2 sm:mt-0 shrink-0">
                   <button
-                    onClick={() => startEdit(expense)}
+                    onClick={() =>
+                      startEdit(
+                        expense._id,
+                        expense.amount,
+                        expense.category,
+                        expense.note
+                      )
+                    }
                     className="text-sm text-gray-600 hover:text-gray-900 underline"
                   >
                     {t("expenseList.edit")}

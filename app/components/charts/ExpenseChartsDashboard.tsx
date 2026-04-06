@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import FilterDropdown from "./FilterDropdown";
 import ExpenseTrendChart from "./ExpenseTrendChart";
 import CategoryExpenseChart from "./CategoryExpenseChart";
+import { useExpense } from "@/app/context/ExpenseContext";
 
 type ExpenseChartsDashboardProps = {
   expenses: Expense[];
@@ -23,15 +24,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-const MOCK_EXPENSES: Expense[] = [
-  { _id: 1, amount: 320, category: "food", date: "2026-02-15", note: "Groceries" },
-  { _id: 2, amount: 120, category: "travel", date: "2026-02-14", note: "Cab" },
-  { id: 3, amount: 800, category: "bills", date: "2026-02-12", note: "Electricity" },
-  { id: 4, amount: 450, category: "shopping", date: "2026-02-10", note: "Clothes" },
-  { id: 5, amount: 210, category: "food", date: "2026-02-08", note: "Lunch" },
-  { id: 6, amount: 300, category: "utilities", date: "2026-01-27", note: "Internet" },
-  { id: 7, amount: 700, category: "bills", date: "2026-01-21", note: "Rent part" },
-];
 
 const normalizeCategory = (category: string) => category.trim().toLowerCase();
 
@@ -54,7 +46,8 @@ const isInCurrentYear = (date: Date) => {
   return date.getFullYear() === now.getFullYear();
 };
 
-export default function ExpenseChartsDashboard({ expenses }: ExpenseChartsDashboardProps) {
+export default function ExpenseChartsDashboard() {
+    const { expenses } = useExpense();
   const [filter, setFilter] = useState<TimeFilter>("weekly");
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [isMounted, setIsMounted] = useState(false);
@@ -63,7 +56,7 @@ export default function ExpenseChartsDashboard({ expenses }: ExpenseChartsDashbo
     setIsMounted(true);
   }, []);
 
-  const sourceExpenses = expenses.length > 0 ? expenses : MOCK_EXPENSES;
+  const sourceExpenses = expenses
 
   const filteredExpenses = useMemo(() => {
     return sourceExpenses.filter((expense) => {
