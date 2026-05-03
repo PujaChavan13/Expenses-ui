@@ -98,7 +98,9 @@ export default function ExpenseList() {
       )}
 
       <ul className="space-y-2 min-w-0">
-        {expenses.map((expense) => (
+        {expenses
+          .sort((a, b) => a.amount - b.amount)
+          .map((expense) => (
           <li
             key={String(expense._id)}
             className="py-3 border-b border-gray-100 last:border-0"
@@ -162,14 +164,9 @@ export default function ExpenseList() {
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-1">
-                <div className="flex justify-between sm:block gap-2">
-                  <span className="font-medium sm:w-20">{expense.amount}</span>
-                  <span className="sm:w-32">
-                    {t(
-                      `expenseForm.categories.${normalizeToKnownCategory(
-                        expense.category
-                      )}`
-                    )}
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">
+                    {normalizeToKnownCategory(expense.category)}-{expense.amount}
                   </span>
                 </div>
                 <span className="text-muted-foreground text-sm truncate flex-1 min-w-0">

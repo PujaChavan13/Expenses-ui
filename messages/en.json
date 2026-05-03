@@ -74,6 +74,9 @@
     "hindi": "हिंदी",
     "marathi": "मराठी"
   },
+  "dashboard": {
+    "title": "Dashboard"
+  },
   "budget": {
     "title": "Monthly Budget",
     "setBudget": "Set Budget",

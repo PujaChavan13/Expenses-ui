@@ -10,14 +10,14 @@ import { useExpense } from "../context/ExpenseContext";
 
 export default function Page() {
   const { expenses } = useExpense();
-  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
+  const [activeSection, setActiveSection] = useState<ActiveSection>("dashboard");
 
   const currentMonth = new Date().toISOString().slice(0, 7);
 
   return (
     <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
       <Header activeSection={activeSection} onSectionClick={setActiveSection} />
-     { activeSection=== null && <ExpenseChartsDashboard  />}
+      { activeSection === "dashboard" && <ExpenseChartsDashboard  />}
       {activeSection === "add" && <ExpenseForm />}
       {activeSection === "summary" && (
         <>

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-export type ActiveSection = "add" | "summary" | "list" | null;
+export type ActiveSection = "add" | "summary" | "list" | "dashboard" | null;
 
 type HeaderProps = {
   activeSection: ActiveSection;
@@ -27,6 +27,12 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 w-full sm:w-auto">
           <nav className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
+            <span 
+            onClick={() => onSectionClick(activeSection === "dashboard" ? null : "dashboard")}
+             className={navClass("dashboard")}
+             >
+              {t("dashboard.title")}
+            </span>
             <span
               onClick={() => onSectionClick(activeSection === "add" ? null : "add")}
               className={navClass("add")}

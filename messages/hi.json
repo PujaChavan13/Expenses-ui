@@ -74,6 +74,9 @@
     "hindi": "हिंदी",
     "marathi": "मराठी"
   },
+  "dashboard": {
+    "title": "डैशबोर्ड"
+  },
   "budget": {
     "title": "मासिक बजट",
     "setBudget": "बजट सेट करें",

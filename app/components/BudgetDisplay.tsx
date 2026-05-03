@@ -146,7 +146,7 @@ export default function BudgetDisplay({ month }: BudgetDisplayProps) {
                         {t("budget.setBudget") || "Budget"}
                       </p>
                       <p className="text-lg sm:text-xl font-semibold">
-                        ${monthlyBudget.toFixed(2)}
+                        ₹{monthlyBudget.toFixed(2)}
                       </p>
                     </div>
                     <div className="bg-red-50 p-3 rounded">
@@ -154,7 +154,7 @@ export default function BudgetDisplay({ month }: BudgetDisplayProps) {
                         {t("budget.spent") || "Spent"}
                       </p>
                       <p className="text-lg sm:text-xl font-semibold text-red-600">
-                        ${spentAmount.toFixed(2)}
+                        ₹{spentAmount.toFixed(2)}
                       </p>
                     </div>
                     <div className={`p-3 rounded ${remainingAmount !== null && remainingAmount >= 0 ? "bg-green-50" : "bg-red-50"}`}>
@@ -162,7 +162,7 @@ export default function BudgetDisplay({ month }: BudgetDisplayProps) {
                         {t("budget.remaining") || "Remaining"}
                       </p>
                       <p className={`text-lg sm:text-xl font-semibold ${remainingAmount !== null && remainingAmount >= 0 ? "text-green-600" : "text-red-600"}`}>
-                        ${remainingAmount !== null ? Math.abs(remainingAmount).toFixed(2) : "0.00"}
+                        ₹{remainingAmount !== null ? Math.abs(remainingAmount).toFixed(2) : "0.00"}
                       </p>
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export default function BudgetDisplay({ month }: BudgetDisplayProps) {
                     {percentageSpent.toFixed(1)}% of budget spent
                     {remainingAmount !== null && remainingAmount < 0 && (
                       <span className="text-red-600 font-semibold ml-1">
-                        (${Math.abs(remainingAmount).toFixed(2)} over budget)
+                        (₹{Math.abs(remainingAmount).toFixed(2)} over budget)
                       </span>
                     )}
                   </p>
