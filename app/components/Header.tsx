@@ -1,9 +1,11 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useAuth } from "@/app/context/AuthContext";
 
 export type ActiveSection = "add" | "summary" | "list" | "dashboard" | null;
 
@@ -14,11 +16,19 @@ type HeaderProps = {
 
 export default function Header({ activeSection, onSectionClick }: HeaderProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const router = useRouter();
+  const { user, logout } = useAuth();
 
   const navClass = (section: ActiveSection) =>
     `cursor-pointer transition-colors ${
       activeSection === section ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"
     }`;
+
+  const handleLogout = () => {
+    logout();
+    router.push(`/${locale}/login`);
+  };
 
   return (
     <Card className="mb-4 sm:mb-6">
@@ -53,7 +63,22 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
             </span>
           </nav>
 
-          <LanguageSwitcher />
+          <div className="flex items-center gap-4 sm:gap-6">
+            {user && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm text-gray-600">
+                  {user.name || user.email}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
       <Separator />

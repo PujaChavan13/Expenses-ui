@@ -4,6 +4,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { locales, type Locale } from "@/i18n";
 import { ExpenseProvider } from "../context/ExpenseContext";
+import { AuthProvider } from "../context/AuthContext";
 
 type LayoutProps = {
   children: ReactNode;
@@ -29,9 +30,11 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages} locale={validatedLocale}>
-      <ExpenseProvider>
-        {children}
-      </ExpenseProvider>
+      <AuthProvider>
+        <ExpenseProvider>
+          {children}
+        </ExpenseProvider>
+      </AuthProvider>
     </NextIntlClientProvider>
   );
 }

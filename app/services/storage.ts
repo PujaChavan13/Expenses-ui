@@ -2,17 +2,54 @@ import { Expense } from "../types/expense";
 
 const BASE_URL = "http://localhost:5000/api";
 
+const getToken = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("authToken");
+  }
+  return null;
+};
+
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const token = getToken();
+  
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Only add Authorization header if token exists
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  // Merge with options headers if they exist
+  if (options.headers && typeof options.headers === "object") {
+    Object.assign(headers, options.headers);
+  }
+
+  const res = await fetch(url, {
+    ...options,
+    headers,
+  });
+
+  if(res.status === 401) {
+    localStorage.removeItem("authToken");
+    // Redirect to login with locale prefix (default to 'en')
+    const locale = typeof window !== "undefined" ? window.location.pathname.split("/")[1] || "en" : "en";
+    window.location.href = `/${locale}/login`;
+    throw new Error("Unauthorized");
+  }
+
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status}`);
+  }
+   return res.json();
+}
 // ==================== EXPENSE APIs ====================
 
 // Get all expenses
 export const getExpenses = async (): Promise<Expense[]> => {
   try {
-    const res = await fetch(`${BASE_URL}/expenses`);
-    if (!res.ok) {
-      console.error(`API error: ${res.status}`);
-      return [];
-    }
-    const data = await res.json();
+    const data = await fetchWithAuth(`${BASE_URL}/expenses`);
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Failed to fetch expenses:", error);
@@ -23,20 +60,10 @@ export const getExpenses = async (): Promise<Expense[]> => {
 // Add expense
 export const addExpense = async (expense: Omit<Expense, "_id">) => {
   try {
-    const res = await fetch(`${BASE_URL}/expenses`, {
+     return await fetchWithAuth(`${BASE_URL}/expenses`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(expense),
     });
-
-    if (!res.ok) {
-      console.error(`API error: ${res.status}`);
-      return null;
-    }
-
-    return res.json();
   } catch (error) {
     console.error("Failed to add expense:", error);
     return null;
@@ -49,17 +76,10 @@ export const updateExpense = async (
   expense: Partial<Expense>
 ) => {
   try {
-    const res = await fetch(`${BASE_URL}/expenses/${id}`, {
+    const res = await fetchWithAuth(`${BASE_URL}/expenses/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(expense),
     });
-
-    if (!res.ok) {
-      console.error(`API error: ${res.status}`);
-    }
   } catch (error) {
     console.error("Failed to update expense:", error);
   }
@@ -68,13 +88,9 @@ export const updateExpense = async (
 // Delete expense
 export const deleteExpense = async (id: string) => {
   try {
-    const res = await fetch(`${BASE_URL}/expenses/${id}`, {
+   await fetchWithAuth(`${BASE_URL}/expenses/${id}`, {
       method: "DELETE",
     });
-
-    if (!res.ok) {
-      console.error(`API error: ${res.status}`);
-    }
   } catch (error) {
     console.error("Failed to delete expense:", error);
   }
@@ -86,16 +102,10 @@ export const getMonthlySummary = async (
   year: number
 ) => {
   try {
-    const res = await fetch(
+    return await fetchWithAuth(
       `${BASE_URL}/expenses/summary?month=${month}&year=${year}`
     );
 
-    if (!res.ok) {
-      console.error(`API error: ${res.status}`);
-      return null;
-    }
-
-    return res.json();
   } catch (error) {
     console.error("Failed to fetch monthly summary:", error);
     return null;
@@ -110,14 +120,7 @@ export const getBudget = async (
   month: number
 ): Promise<{ amount: number } | null> => {
   try {
-    const res = await fetch(`${BASE_URL}/budget/${year}/${month}`);
-
-    if (!res.ok) {
-      if (res.status === 404) return null;
-      throw new Error(`API error: ${res.status}`);
-    }
-
-    return res.json();
+    return await fetchWithAuth(`${BASE_URL}/budget/${year}/${month}`)
   } catch (error) {
     console.error("Failed to fetch budget:", error);
     throw error;
@@ -131,19 +134,10 @@ export const setBudget = async (
   amount: number
 ): Promise<{ amount: number }> => {
   try {
-    const res = await fetch(`${BASE_URL}/budget/${year}/${month}`, {
+    return  await fetchWithAuth(`${BASE_URL}/budget/${year}/${month}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ amount }),
     });
-
-    if (!res.ok) {
-      throw new Error(`API error: ${res.status}`);
-    }
-
-    return res.json();
   } catch (error) {
     console.error("Failed to set budget:", error);
     throw error;

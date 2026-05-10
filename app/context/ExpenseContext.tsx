@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useCallback,useContext, useEffect, useState, ReactNode,useMemo } from "react";
 import { Expense } from "../types/expense";
 import {getExpenses, addExpense,deleteExpense,updateExpense,getBudget,setBudget,
 } from "../services/storage";
@@ -29,7 +29,7 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
   const [budgetLoading, setBudgetLoading] = useState(false);
 
   // Fetch all expenses
-  const fetchExpenses = async () => {
+  const fetchExpenses =useCallback( async () => {
     try {
       setLoading(true);
       setError(null);
@@ -42,15 +42,16 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Fetch budget for a specific month
-  const fetchBudget = async (year: number, month: number) => {
+  const fetchBudget = useCallback(async (year: number, month: number) => {
     try {
       setBudgetLoading(true);
       setError(null);
       const budgetData = await getBudget(year, month);
-      setMonthlyBudget(budgetData?.amount ?? null);
+  
+      setMonthlyBudget(budgetData?.amount ?? 0);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Failed to fetch budget";
       setError(errorMsg);
@@ -58,7 +59,7 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setBudgetLoading(false);
     }
-  };
+  }, []);
 
   // Update budget for a specific month
   const updateBudget = async (year: number, month: number, amount: number) => {
@@ -126,10 +127,13 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch expenses on mount
   useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
     fetchExpenses();
+    }
   }, []);
 
-  const value: ExpenseContextType = {
+  const value = useMemo(() => ({
     expenses,
     loading,
     error,
@@ -141,7 +145,13 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
     updateExpenseById,
     fetchBudget,
     updateBudget,
-  };
+  }),[
+    expenses,
+    loading,
+    error,
+    monthlyBudget,
+    budgetLoading,
+  ]);
 
   return (
     <ExpenseContext.Provider value={value}>
