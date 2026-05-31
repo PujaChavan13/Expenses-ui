@@ -17,18 +17,20 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
+      <>
         <Header activeSection={activeSection} onSectionClick={setActiveSection} />
-        { activeSection === "dashboard" && <ExpenseChartsDashboard  />}
-        {activeSection === "add" && <ExpenseForm />}
-        {activeSection === "summary" && (
-          <>
-            <BudgetDisplay month={currentMonth} />
-            <MonthlySummary month={currentMonth} />
-          </>
-        )}
-        {activeSection === "list" && <ExpenseList />}
-      </main>
+        <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
+          {activeSection === "dashboard" && <ExpenseChartsDashboard />}
+          {activeSection === "add" && <ExpenseForm />}
+          {activeSection === "summary" && (
+            <>
+              <BudgetDisplay month={currentMonth} />
+              <MonthlySummary month={currentMonth} />
+            </>
+          )}
+          {activeSection === "list" && <ExpenseList />}
+        </main>
+      </>
     </ProtectedRoute>
   );
 }

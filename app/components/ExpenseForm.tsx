@@ -102,7 +102,8 @@ export default function ExpenseForm() {
             onChange={(e) =>
               setAmount(e.target.value === "" ? "" : Number(e.target.value))
             }
-            className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-32 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            inputMode="decimal"
+            className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-40 placeholder:text-gray-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:ring-2 focus:ring-gray-400"
           />
         </div>
 

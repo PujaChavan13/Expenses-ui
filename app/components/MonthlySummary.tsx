@@ -56,7 +56,12 @@ export default function MonthlySummary({  month }:{month:string} ) {
 
   // Filter expenses for the selected month
   const monthlyExpenses = useMemo(
-    () => expenses.filter((expense) => expense.date.startsWith(viewMonth)),
+    () => expenses.filter((expense) => {
+      const expenseDate = new Date(expense.date)
+      .toISOString()
+      .slice(0, 7); // Extract year-month
+      return expenseDate === viewMonth;
+    }),
     [expenses, viewMonth]
   );
 
@@ -64,7 +69,8 @@ export default function MonthlySummary({  month }:{month:string} ) {
   const dateTotals = useMemo(
     () =>
       monthlyExpenses.reduce<Record<string, number>>((acc, expense) => {
-        acc[expense.date] = (acc[expense.date] || 0) + expense.amount;
+       const formattedDate = new Date(expense.date).toISOString().slice(0, 10); // Assuming expense.date is in YYYY-MM-DD format
+        acc[formattedDate] = (acc[formattedDate] || 0) + expense.amount;
         return acc;
       }, {}),
     [monthlyExpenses]
@@ -74,7 +80,7 @@ export default function MonthlySummary({  month }:{month:string} ) {
   const selectedDateExpenses = useMemo(
     () =>
       selectedDate
-        ? monthlyExpenses.filter((e) => e.date === selectedDate)
+        ? monthlyExpenses.filter((e) => new Date(e.date).toISOString().slice(0, 10) === selectedDate)
         : [],
     [monthlyExpenses, selectedDate]
   );

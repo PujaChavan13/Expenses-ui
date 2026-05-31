@@ -15,17 +15,23 @@ export default function Page() {
   const currentMonth = new Date().toISOString().slice(0, 7);
 
   return (
-    <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-gray-50">
       <Header activeSection={activeSection} onSectionClick={setActiveSection} />
-      { activeSection === "dashboard" && <ExpenseChartsDashboard  />}
-      {activeSection === "add" && <ExpenseForm />}
-      {activeSection === "summary" && (
-        <>
-          <BudgetDisplay month={currentMonth} />
-          <MonthlySummary month={currentMonth} />
-        </>
-      )}
-      {activeSection === "list" && <ExpenseList />}
-    </main>
+      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain">
+        <div className="max-w-5xl mx-auto p-4 sm:p-6">
+          {activeSection === "dashboard" && <ExpenseChartsDashboard />}
+          {activeSection === "add" && <ExpenseForm />}
+          {activeSection === "summary" && (
+            <>
+              <BudgetDisplay month={currentMonth} />
+              <MonthlySummary month={currentMonth} />
+            </>
+          )}
+          {activeSection === "list" && <ExpenseList />}
+        </div>
+      </main>
+    </div>
   );
 }
+  
+

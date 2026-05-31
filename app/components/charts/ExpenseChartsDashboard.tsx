@@ -15,14 +15,13 @@ type ExpenseChartsDashboardProps = {
 
 const CATEGORY_LABELS: Record<string, string> = {
   food: "Food",
-  travel: "Travel",
-  bills: "Bills",
-  shopping: "Shopping",
-  utilities: "Utilities",
   transport: "Transport",
   entertainment: "Entertainment",
+  shopping: "Shopping",
+  utilities: "Utilities",
   other: "Other",
 };
+  
 
 
 const normalizeCategory = (category: string) => category.trim().toLowerCase();

@@ -5,6 +5,7 @@ import { Expense } from "../types/expense";
 import {getExpenses, addExpense,deleteExpense,updateExpense,getBudget,setBudget,
 } from "../services/storage";
 
+
 type ExpenseContextType = {
   expenses: Expense[];
   loading: boolean;
@@ -17,6 +18,7 @@ type ExpenseContextType = {
   updateExpenseById: (id: string, data: Partial<Expense>) => Promise<void>;
   fetchBudget: (year: number, month: number) => Promise<void>;
   updateBudget: (year: number, month: number, amount: number) => Promise<void>;
+  clearExpenses: () => void;
 };
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
@@ -27,7 +29,12 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   const [monthlyBudget, setMonthlyBudget] = useState<number | null>(null);
   const [budgetLoading, setBudgetLoading] = useState(false);
-
+ 
+  const clearExpenses = () => {
+    setExpenses([]);
+    setMonthlyBudget(null);
+    setError(null);
+  }
   // Fetch all expenses
   const fetchExpenses =useCallback( async () => {
     try {
@@ -130,10 +137,14 @@ export const ExpenseProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem("authToken");
     if (token) {
     fetchExpenses();
+    } else{
+      setExpenses([]);
     }
-  }, []);
+  }, [fetchExpenses]);
+
 
   const value = useMemo(() => ({
+    clearExpenses,
     expenses,
     loading,
     error,
