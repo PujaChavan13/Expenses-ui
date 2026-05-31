@@ -2,10 +2,11 @@
 
 import { useState, FormEvent ,useEffect} from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { Card } from "@/components/ui/card";
+import ScrollablePage from "@/app/components/ScrollablePage";
 
 interface FormErrors {
   email?: string;
@@ -16,6 +17,7 @@ interface FormErrors {
 export default function LoginPage() {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("common");
   const { login, error: authError, isAuthenticated,loading:authLoading } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -38,9 +40,11 @@ export default function LoginPage() {
 
    if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
-        <p className="text-gray-600">Loading...</p>
-      </div>
+      <ScrollablePage className="bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-full flex items-center justify-center px-4 py-8">
+          <p className="text-gray-600">{t("loading")}</p>
+        </div>
+      </ScrollablePage>
     );
   }
 
@@ -117,7 +121,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+    <ScrollablePage className="bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-full flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md p-8 shadow-lg">
         {/* Header */}
         <div className="text-center mb-8">
@@ -241,6 +246,7 @@ export default function LoginPage() {
           </p>
         </div>
       </Card>
-    </div>
+      </div>
+    </ScrollablePage>
   );
 }

@@ -6,7 +6,10 @@
   },
   "header": {
     "welcome": "Welcome to Expense Tracker",
-    "description": "Track your daily expenses efficiently"
+    "description": "Track your daily expenses efficiently",
+    "logout": "Logout",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "expenseTracker": {
     "title": "Expense Tracker",
@@ -76,6 +79,9 @@
   },
   "dashboard": {
     "title": "Dashboard"
+  },
+  "common": {
+    "loading": "Loading..."
   },
   "budget": {
     "title": "Monthly Budget",

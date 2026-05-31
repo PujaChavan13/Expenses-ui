@@ -6,6 +6,7 @@ import MonthlySummary from "@/app/components/MonthlySummary";
 import BudgetDisplay from "@/app/components/BudgetDisplay";
 import ExpenseChartsDashboard from "@/app/components/charts/ExpenseChartsDashboard";
 import Header, { ActiveSection } from "@/app/components/Header";
+import AppShell from "@/app/components/AppShell";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 import { useExpense } from "@/app/context/ExpenseContext";
 
@@ -17,9 +18,12 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <>
-        <Header activeSection={activeSection} onSectionClick={setActiveSection} />
-        <main className="max-w-5xl mx-auto p-4 sm:p-6 min-h-screen">
+      <AppShell
+        header={
+          <Header activeSection={activeSection} onSectionClick={setActiveSection} />
+        }
+      >
+        <div className="max-w-5xl mx-auto p-4 sm:p-6">
           {activeSection === "dashboard" && <ExpenseChartsDashboard />}
           {activeSection === "add" && <ExpenseForm />}
           {activeSection === "summary" && (
@@ -29,8 +33,8 @@ export default function DashboardPage() {
             </>
           )}
           {activeSection === "list" && <ExpenseList />}
-        </main>
-      </>
+        </div>
+      </AppShell>
     </ProtectedRoute>
   );
 }

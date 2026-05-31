@@ -105,7 +105,7 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
                 {t("expenseTracker.title")}
               </h1>
               <p className="text-xs text-gray-500 truncate">
-                {t("expenseTracker.title")}
+                {t("header.description")}
               </p>
             </div>
           </div>
@@ -144,10 +144,10 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
                     shadow-md hover:shadow-lg
                     focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
                   "
-                  aria-label="Logout"
+                  aria-label={t("header.logout")}
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
+                  <span>{t("header.logout")}</span>
                 </button>
               </div>
             )}
@@ -164,7 +164,7 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
                 transition-colors duration-200
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
               "
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")}
               aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
@@ -229,7 +229,7 @@ export default function Header({ activeSection, onSectionClick }: HeaderProps) {
                   "
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
+                  <span>{t("header.logout")}</span>
                 </button>
               </>
             )}

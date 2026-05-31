@@ -32,7 +32,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages} locale={validatedLocale}>
       <AuthProvider>
         <ExpenseProvider>
-          {children}
+          <div className="h-full min-h-0">{children}</div>
         </ExpenseProvider>
       </AuthProvider>
     </NextIntlClientProvider>

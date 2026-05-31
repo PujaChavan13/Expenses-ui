@@ -2,10 +2,11 @@
 
 import { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { Card } from "@/components/ui/card";
+import ScrollablePage from "@/app/components/ScrollablePage";
 
 interface FormErrors {
   name?: string;
@@ -126,7 +127,8 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+    <ScrollablePage className="bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-full flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md p-8 shadow-lg">
         {/* Header */}
         <div className="text-center mb-8">
@@ -306,6 +308,7 @@ export default function SignupPage() {
           </p>
         </div>
       </Card>
-    </div>
+      </div>
+    </ScrollablePage>
   );
 }
