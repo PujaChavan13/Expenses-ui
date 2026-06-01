@@ -1,6 +1,6 @@
 import { Expense } from "../types/expense";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const getToken = () => {
   if (typeof window !== "undefined") {
