@@ -1,0 +1,98 @@
+{
+  "navigation": {
+    "title": "खर्च ट्रैकर",
+    "summary": "मासिक सारांश",
+    "expenses": "खर्च"
+  },
+  "header": {
+    "welcome": "खर्च ट्रैकर में आपका स्वागत है",
+    "description": "अपने दैनिक खर्चों को कुशलतापूर्वक ट्रैक करें",
+    "logout": "लॉग आउट",
+    "openMenu": "मेनू खोलें",
+    "closeMenu": "मेनू बंद करें"
+  },
+  "expenseTracker": {
+    "title": "खर्च ट्रैकर",
+    "addExpense": "खर्च जोड़ें",
+    "amount": "राशि",
+    "category": "श्रेणी",
+    "save": "सहेजें"
+  },
+  "expenseForm": {
+    "title": "नया खर्च जोड़ें",
+    "subtitle": "नया खर्च प्रविष्टि जोड़ने के लिए नीचे विवरण भरें",
+    "amount": "राशि",
+    "amountPlaceholder": "राशि दर्ज करें",
+    "category": "श्रेणी",
+    "selectCategory": "एक श्रेणी चुनें",
+    "categories": {
+      "food": "खाना",
+      "transport": "परिवहन",
+      "entertainment": "मनोरंजन",
+      "utilities": "सुविधाएं",
+      "shopping": "खरीदारी",
+      "other": "अन्य"
+    },
+    "description": "विवरण",
+    "descriptionPlaceholder": "विवरण दर्ज करें (वैकल्पिक)",
+    "date": "तारीख",
+    "save": "खर्च सहेजें",
+    "cancel": "रद्द करें",
+    "errors": {
+      "amountRequired": "राशि आवश्यक है",
+      "categoryRequired": "श्रेणी आवश्यक है",
+      "invalidAmount": "कृपया एक मान्य राशि दर्ज करें"
+    },
+    "success": "खर्च सफलतापूर्वक जोड़ा गया"
+  },
+  "expenseList": {
+    "title": "हाल के खर्च",
+    "empty": "अभी कोई खर्च नहीं। अपना पहला खर्च जोड़ें!",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "total": "कुल",
+    "date": "तारीख",
+    "category": "श्रेणी",
+    "amount": "राशि",
+    "confirmDelete": "क्या आप वाकई इस खर्च को हटाना चाहते हैं?"
+  },
+  "monthlySummary": {
+    "title": "मासिक सारांश",
+    "totalExpenses": "कुल खर्च",
+    "categoryBreakdown": "श्रेणी विभाजन",
+    "currentMonth": "वर्तमान माह",
+    "calendar": {
+      "open": "कैलेंडर दिखाएं",
+      "close": "कैलेंडर छुपाएं",
+      "previousMonth": "पिछला महीना",
+      "nextMonth": "अगला महीना"
+    },
+    "noData": "इस महीने के लिए कोई खर्च डेटा नहीं",
+    "highest": "सर्वोच्च खर्च श्रेणी",
+    "average": "औसत खर्च"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "भाषा चुनें",
+    "english": "English",
+    "hindi": "हिंदी",
+    "marathi": "मराठी"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड"
+  },
+  "common": {
+    "loading": "लोड हो रहा है..."
+  },
+  "budget": {
+    "title": "मासिक बजट",
+    "setBudget": "बजट सेट करें",
+    "edit": "बजट संपादित करें",
+    "setAmount": "बजट राशि सेट करें",
+    "spent": "खर्च किया गया",
+    "remaining": "शेष",
+    "noBudget": "इस महीने के लिए कोई बजट सेट नहीं है",
+    "updateSuccess": "बजट सफलतापूर्वक अपडेट किया गया",
+    "percentageSpent": "बजट का खर्च",
+    "overBudget": "बजट से अधिक"
+  }
+}

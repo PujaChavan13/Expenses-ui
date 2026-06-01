@@ -1,0 +1,98 @@
+{
+  "navigation": {
+    "title": "खर्च ट्रॅकर",
+    "summary": "मासिक सारांश",
+    "expenses": "खर्च"
+  },
+  "header": {
+    "welcome": "खर्च ट्रॅकरमध्ये आपले स्वागत आहे",
+    "description": "आपल्या दैनंदिन खर्चांचा कुशलतेने मागोवा घ्या",
+    "logout": "बाहेर पडा",
+    "openMenu": "मेनू उघडा",
+    "closeMenu": "मेनू बंद करा"
+  },
+  "expenseTracker": {
+    "title": "खर्च ट्रॅकर",
+    "addExpense": "खर्च जोडा",
+    "amount": "रक्कम",
+    "category": "वर्ग",
+    "save": "जतन करा"
+  },
+  "expenseForm": {
+    "title": "नवीन खर्च जोडा",
+    "subtitle": "नवीन खर्च प्रविष्टी जोडण्यासाठी खालील तपशील भरा",
+    "amount": "रक्कम",
+    "amountPlaceholder": "रक्कम प्रविष्ट करा",
+    "category": "वर्ग",
+    "selectCategory": "एक वर्ग निवडा",
+    "categories": {
+      "food": "अन्न",
+      "transport": "वाहतूक",
+      "entertainment": "मनोरंजन",
+      "utilities": "सुविधा",
+      "shopping": "खरेदी",
+      "other": "इतर"
+    },
+    "description": "विवरण",
+    "descriptionPlaceholder": "विवरण प्रविष्ट करा (वैकल्पिक)",
+    "date": "तारीख",
+    "save": "खर्च जतन करा",
+    "cancel": "रद्द करा",
+    "errors": {
+      "amountRequired": "रक्कम आवश्यक आहे",
+      "categoryRequired": "वर्ग आवश्यक आहे",
+      "invalidAmount": "कृपया वैध रक्कम प्रविष्ट करा"
+    },
+    "success": "खर्च यशस्वीरित्या जोडले गेले"
+  },
+  "expenseList": {
+    "title": "अलीकडील खर्च",
+    "empty": "अजून कोणताही खर्च नाही. आपली पहिली एंट्री जोडा!",
+    "delete": "हटवा",
+    "edit": "संपादित करा",
+    "total": "एकूण",
+    "date": "तारीख",
+    "category": "वर्ग",
+    "amount": "रक्कम",
+    "confirmDelete": "आप या खर्चाला हटवू इच्छिता?"
+  },
+  "monthlySummary": {
+    "title": "मासिक सारांश",
+    "totalExpenses": "एकूण खर्च",
+    "categoryBreakdown": "वर्ग विभाजन",
+    "currentMonth": "सध्याचा महिना",
+    "calendar": {
+      "open": "कॅलेंडर दाखवा",
+      "close": "कॅलेंडर लपवा",
+      "previousMonth": "मागील महिना",
+      "nextMonth": "पुढचा महिना"
+    },
+    "noData": "या महिन्यासाठी कोणताही खर्च डेटा नाही",
+    "highest": "सर्वोच्च खर्च वर्ग",
+    "average": "सरासरी खर्च"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "भाषा निवडा",
+    "english": "English",
+    "hindi": "हिंदी",
+    "marathi": "मराठी"
+  },
+  "dashboard": {
+    "title": "डॅशबोर्ड"
+  },
+  "common": {
+    "loading": "लोड होत आहे..."
+  },
+  "budget": {
+    "title": "मासिक बजेट",
+    "setBudget": "बजेट सेट करा",
+    "edit": "बजेट संपादित करा",
+    "setAmount": "बजेटची रक्कम सेट करा",
+    "spent": "खर्च केलेले",
+    "remaining": "शिल्लक",
+    "noBudget": "या महिन्यासाठी कोणताही बजेट सेट नाही",
+    "updateSuccess": "बजेट यशस्वीरित्या आपडेट केला गेला",
+    "percentageSpent": "बजेटाचा खर्च",
+    "overBudget": "बजेटपेक्षा जास्त"
+  }
+}
